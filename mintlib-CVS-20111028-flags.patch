@@ -1,0 +1,12 @@
+diff -up mintlib-CVS-20111028/lib_g/Makefile.flags mintlib-CVS-20111028/lib_g/Makefile
+--- mintlib-CVS-20111028/lib_g/Makefile.flags	2012-03-25 17:36:10.000000000 +0200
++++ mintlib-CVS-20111028/lib_g/Makefile	2012-03-25 17:36:15.000000000 +0200
+@@ -16,7 +16,7 @@ subdir = lib_g
+ 
+ qualifier = _g
+ instdir =
+-cflags = -O -g
++cflags = -O0 -g
+ nocflags = -O2 -O3 -fomit-frame-pointer -fexpensive-optimizations
+ 
+ default: all
