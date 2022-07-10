@@ -7,7 +7,7 @@
 Name:           m68k-atari-mint-mintlib
 Summary:        Necessary files from the MiNTLib
 Version:        0.60.1
-Release:        3.%{gitdate}cvs%{?dist}
+Release:        4.%{gitdate}cvs%{?dist}
 License:        LGPL+
 URL:            https://github.com/freemint/mintlib
 #Source0:        http://vincent.riviere.free.fr/soft/m68k-atari-mint/archives/mintlib-CVS-%%{cvsdate}.tar.gz
@@ -27,6 +27,8 @@ BuildRequires:  flex-devel
 BuildRequires:  gcc
 BuildRequires:  make
 Requires:       m68k-atari-mint-filesystem
+Provides:       m68k-atari-mint-libc
+Conflicts:      m68k-atari-mint-libcmini
 
 
 %description
@@ -83,6 +85,9 @@ rm -rf $RPM_BUILD_ROOT%{mint_datadir}
 
 
 %changelog
+* Sun Jul 10 2022 Dan Horák <dan[at]danny.cz> - 0.60.1-4.20200504
+- add generic libc Provides
+
 * Sun Jul 10 2022 Dan Horák <dan[at]danny.cz> - 0.60.1-3.20200504
 - updated to 20200504 snapshot
 
