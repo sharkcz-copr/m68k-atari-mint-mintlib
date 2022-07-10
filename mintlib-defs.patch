@@ -1,0 +1,13 @@
+diff -up mintlib-Git-20200504/mintlib/linea.c.orig mintlib-Git-20200504/mintlib/linea.c
+--- mintlib-Git-20200504/mintlib/linea.c.orig	2022-06-14 23:05:56.041623287 +0200
++++ mintlib-Git-20200504/mintlib/linea.c	2022-06-14 23:06:09.729967043 +0200
+@@ -3,7 +3,9 @@
+  *	++jrb
+  */
+ 
++#ifndef __NO_INLINE__
+ #define __NO_INLINE__
++#endif
+ #include <mint/linea.h>
+ 
+ #ifdef __GNUC__

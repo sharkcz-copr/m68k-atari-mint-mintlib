@@ -2,19 +2,23 @@
 %global debug_package %{nil}
 %global __strip /bin/true
 
-%global cvsdate 20140312
+%global gitdate 20200504
 
 Name:           m68k-atari-mint-mintlib
 Summary:        Necessary files from the MiNTLib
 Version:        0.60.1
-Release:        2.%{cvsdate}cvs%{?dist}
+Release:        3.%{gitdate}cvs%{?dist}
 License:        LGPL+
 URL:            https://github.com/freemint/mintlib
 #Source0:        http://vincent.riviere.free.fr/soft/m68k-atari-mint/archives/mintlib-CVS-%%{cvsdate}.tar.gz
 # use my https enabled mirror instead
-Source0:        https://fedora.danny.cz/atari/mintlib-CVS-%{cvsdate}.tar.gz
+Source0:        https://fedora.danny.cz/atari/mintlib-Git-%{gitdate}.tar.gz
 # workaround http://gcc.gnu.org/bugzilla/show_bug.cgi?id=52714 by using -O0 for debug build
 Patch0:         mintlib-CVS-20111028-flags.patch
+# check for builtin define first
+Patch1:         mintlib-defs.patch
+# add missing prototypes for non-optimized build
+Patch2:         mintlib-no-inline.patch
 BuildArch:      noarch
 BuildRequires:  m68k-atari-mint-gcc
 BuildRequires:  bison
@@ -41,8 +45,10 @@ available as binary rpm).
 
 
 %prep
-%setup -q -n mintlib-CVS-%{cvsdate}
+%setup -q -n mintlib-Git-%{gitdate}
 %patch0 -p1 -b .flags
+%patch1 -p1 -b .defs
+%patch2 -p1 -b .no-inline
 
 find . -type f -exec chmod -x {} \;
 chmod a+x move-if-change mintlib/gensys mkinstalldirs
@@ -62,8 +68,11 @@ make install prefix=$RPM_BUILD_ROOT%{mint_prefix} \
            bootsbindir=$RPM_BUILD_ROOT/%{mint_sbindir} \
            REDO=none CROSS=yes
 
-# cleanup
+# cleanup - man pages
 rm -rf $RPM_BUILD_ROOT%{mint_mandir}
+# cleanup - timezone binaries and data
+rm -rf $RPM_BUILD_ROOT%{mint_sbindir}
+rm -rf $RPM_BUILD_ROOT%{mint_datadir}
 
 
 %files
@@ -74,6 +83,9 @@ rm -rf $RPM_BUILD_ROOT%{mint_mandir}
 
 
 %changelog
+* Sun Jul 10 2022 Dan Horák <dan[at]danny.cz> - 0.60.1-3.20200504
+- updated to 20200504 snapshot
+
 * Mon Jun 27 2022 Dan Horák <dan[at]danny.cz> - 0.60.1-2.20140312
 - little update before moving to COPR
 
