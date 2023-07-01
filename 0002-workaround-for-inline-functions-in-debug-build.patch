@@ -1,0 +1,67 @@
+From 9f46097d43a45d0aa4ee0cd291a8fff0029a6e4e Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dan=20Hor=C3=A1k?= <dan@danny.cz>
+Date: Sat, 1 Jul 2023 22:52:52 +0200
+Subject: [PATCH 2/2] workaround for inline functions in debug build
+
+Some prototypes are missing for functions that are inlined in standard
+build. So add them into the affected source files.
+---
+ stdio/linewrap.c   | 6 ++++++
+ string/strtoimax.c | 6 ++++++
+ string/strtoumax.c | 6 ++++++
+ 3 files changed, 18 insertions(+)
+
+diff --git a/stdio/linewrap.c b/stdio/linewrap.c
+index 41b1085..fa69a92 100644
+--- a/stdio/linewrap.c
++++ b/stdio/linewrap.c
+@@ -23,6 +23,12 @@
+ 
+ #include "linewrap.h"
+ 
++
++#ifdef __NO_INLINE__
++extern int line_wrapped (FILE *stream);
++extern struct line_wrap_data *__line_wrap_update (FILE *stream);
++#endif
++
+ void __line_wrap_output (FILE *, int);
+ 
+ static int lwclose (void *cookie);
+diff --git a/string/strtoimax.c b/string/strtoimax.c
+index 0bd22ec..1f709da 100644
+--- a/string/strtoimax.c
++++ b/string/strtoimax.c
+@@ -20,6 +20,12 @@
+ #include <inttypes.h>
+ #include <stdlib.h>
+ 
++#ifdef __NO_INLINE__
++extern long long int __strtoll_internal (__const char *__restrict __nptr,
++                                              char **__restrict __endptr,
++                                              int __base, int __group);
++#endif
++
+ intmax_t
+ strtoimax (const char *__restrict nptr, char **__restrict endptr, int base)
+ {
+diff --git a/string/strtoumax.c b/string/strtoumax.c
+index 9f29a36..7a4e840 100644
+--- a/string/strtoumax.c
++++ b/string/strtoumax.c
+@@ -20,6 +20,12 @@
+ #include <inttypes.h>
+ #include <stdlib.h>
+ 
++#ifdef __NO_INLINE__
++extern unsigned long long int __strtoull_internal (__const char *__restrict __nptr,
++                                              char **__restrict __endptr,
++                                              int __base, int __group);
++#endif
++
+ uintmax_t
+ strtoumax (const char *__restrict nptr, char **__restrict endptr, int base)
+ {
+-- 
+2.40.1
+

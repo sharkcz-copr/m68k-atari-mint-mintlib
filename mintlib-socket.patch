@@ -1,0 +1,19 @@
+commit e2a0246827e89cce4cd6ed52ac62c8cf2b713008
+Author: Thorsten Otto <admin@tho-otto.de>
+Date:   Tue Mar 28 16:56:48 2023 +0200
+
+    Fix duplicate definition of freeifaddrs
+
+diff --git a/socket/ifaddrs.c b/socket/ifaddrs.c
+index d300383..21cd86e 100644
+--- a/socket/ifaddrs.c
++++ b/socket/ifaddrs.c
+@@ -172,7 +172,7 @@ weak_alias(__getifaddrs, getifaddrs)
+ 
+ __typeof__(freeifaddrs) __freeifaddrs;
+ 
+-void freeifaddrs(struct ifaddrs *ifa)
++void __freeifaddrs(struct ifaddrs *ifa)
+ {
+ 	free(ifa);
+ }

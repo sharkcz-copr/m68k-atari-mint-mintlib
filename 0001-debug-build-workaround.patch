@@ -1,0 +1,27 @@
+From 7df597b0b5a653fe2a0d76a1a195ca4ae0200b09 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dan=20Hor=C3=A1k?= <dan@danny.cz>
+Date: Sat, 1 Jul 2023 22:51:21 +0200
+Subject: [PATCH 1/2] debug build workaround
+
+workaround http://gcc.gnu.org/bugzilla/show_bug.cgi?id=52714 by using
+-O0 for debug build instead of -O
+---
+ lib_g/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib_g/Makefile b/lib_g/Makefile
+index e384d3b..44d2907 100644
+--- a/lib_g/Makefile
++++ b/lib_g/Makefile
+@@ -16,7 +16,7 @@ subdir = lib_g
+ 
+ qualifier = _g
+ instdir =
+-cflags = -O -g
++cflags = -O0 -g
+ nocflags = -O2 -O3 -fomit-frame-pointer -fexpensive-optimizations
+ 
+ default: all
+-- 
+2.40.1
+

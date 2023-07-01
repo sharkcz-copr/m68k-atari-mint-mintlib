@@ -2,23 +2,25 @@
 %global debug_package %{nil}
 %global __strip /bin/true
 
-%global gitdate 20200504
+%global gitdate 20220821
 
 Name:           m68k-atari-mint-mintlib
 Summary:        Necessary files from the MiNTLib
 Version:        0.60.1
-Release:        4.%{gitdate}cvs%{?dist}
+Release:        5.%{gitdate}cvs%{?dist}
 License:        LGPL+
 URL:            https://github.com/freemint/mintlib
-#Source0:        http://vincent.riviere.free.fr/soft/m68k-atari-mint/archives/mintlib-CVS-%%{cvsdate}.tar.gz
+#Source0:        http://vincent.riviere.free.fr/soft/m68k-atari-mint/archives/mintlib-Git-%%{gitdate}.tar.gz
 # use my https enabled mirror instead
 Source0:        https://fedora.danny.cz/atari/mintlib-Git-%{gitdate}.tar.gz
 # workaround http://gcc.gnu.org/bugzilla/show_bug.cgi?id=52714 by using -O0 for debug build
-Patch0:         mintlib-CVS-20111028-flags.patch
+Patch0:         0001-debug-build-workaround.patch
 # check for builtin define first
 Patch1:         mintlib-defs.patch
 # add missing prototypes for non-optimized build
-Patch2:         mintlib-no-inline.patch
+Patch2:         0002-workaround-for-inline-functions-in-debug-build.patch
+# fix duplicate definition
+Patch3:         mintlib-socket.patch
 BuildArch:      noarch
 BuildRequires:  m68k-atari-mint-gcc
 BuildRequires:  bison
@@ -47,10 +49,7 @@ available as binary rpm).
 
 
 %prep
-%setup -q -n mintlib-Git-%{gitdate}
-%patch0 -p1 -b .flags
-%patch1 -p1 -b .defs
-%patch2 -p1 -b .no-inline
+%autosetup -p1 -n mintlib-Git-%{gitdate}
 
 find . -type f -exec chmod -x {} \;
 chmod a+x move-if-change mintlib/gensys mkinstalldirs
@@ -85,6 +84,9 @@ rm -rf $RPM_BUILD_ROOT%{mint_datadir}
 
 
 %changelog
+* Sun Jul 02 2023 Dan Horák <dan[at]danny.cz> - 0.60.1-5.20220821
+- updated to 20220821 snapshot
+
 * Sun Jul 10 2022 Dan Horák <dan[at]danny.cz> - 0.60.1-4.20200504
 - add generic libc Provides
 
